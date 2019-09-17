@@ -38818,6 +38818,7 @@ let gethConnectInfo = document.querySelector('#gethConnectInfo');
 let accountsDiv = document.querySelector('#accountsDiv');
 let accountsBtn = document.querySelector('#accountsBtn');
 let accountsInfo = document.querySelector('#accountsInfo');
+
 let web3 = false;
 
 gethConnectBtn.onclick = () => {
@@ -38840,7 +38841,16 @@ accountsBtn.onclick = () => {
     if (web3 === false) {
         accountsInfo.innerText = "connect false";
     } else {
-        accountsInfo.innerText = web3.eth.accounts
+        let accounts = web3.eth.accounts;
+        let accountsObjArray = [];
+        for (let i in accounts) {
+            let accountsObj = {account: "Empty", balance: "Empty"};
+            accountsObj.account = accounts[i];
+            accountsObj.balance = web3.eth.getBalance(accounts[i]).toString(10);
+            accountsObjArray.push(accountsObj)
+        }
+        console.log(accountsObjArray);
+        accountsInfo.innerText = JSON.stringify(accountsObjArray)
     }
 };
 
