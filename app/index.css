@@ -1,0 +1,12 @@
+body {
+    background: ghostwhite;
+}
+
+/*#connectDiv {*/
+/*    background: bisque;*/
+/*}*/
+
+#accountsDiv {
+    /*background: aliceblue;*/
+    display: none;
+}
