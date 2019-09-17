@@ -5,3 +5,4 @@ browserify (https://github.com/browserify/browserify)
 Chrome Extensions
 ---
 > chrome://extensions/
+> (Select) path/Chrome-Ethe-Wallet/app
