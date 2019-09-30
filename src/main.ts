@@ -1,15 +1,13 @@
-let Web3 = require('web3');
-
-let gethConnectBtn = document.querySelector('#gethConnectBtn');
-let gethUrl = document.querySelector('#gethUrl');
-let gethConnectInfo = document.querySelector('#gethConnectInfo');
-let accountsDiv = document.querySelector('#accountsDiv');
-let accountsBtn = document.querySelector('#accountsBtn');
-let accountsInfo = document.querySelector('#accountsInfo');
-
-let web3 = false;
-
-let urlCookieKey = "urlCookie";
+const Web3 = require('web3');
+let web3: any;
+let date: Date = new Date();
+const urlCookieKey: string = "urlCookie";
+let gethUrl: HTMLInputElement = (<HTMLInputElement>document.getElementById('gethUrl'));
+let gethConnectBtn: HTMLButtonElement = (<HTMLButtonElement>document.getElementById('gethConnectBtn'));
+let gethConnectInfo: HTMLParagraphElement = (<HTMLParagraphElement>document.getElementById('gethConnectInfo'));
+let accountsDiv: HTMLDivElement = (<HTMLDivElement>document.getElementById('accountsDiv'));
+let accountsBtn: HTMLButtonElement = (<HTMLButtonElement>document.getElementById('accountsBtn'));
+let accountsInfo: HTMLParagraphElement = (<HTMLParagraphElement>document.getElementById('accountsInfo'));
 
 let init = getUrlCookie(urlCookieKey);
 if (init !== null) {
@@ -37,32 +35,30 @@ gethConnectBtn.onclick = async () => {
 };
 
 accountsBtn.onclick = async () => {
-    if (web3 === false) {
+    if (web3 === undefined) {
         accountsInfo.innerText = "connect false";
     } else {
-        let accounts = await web3.eth.getAccounts();
-        let accountsObjArray = [];
+        let accounts: Array<string> = await web3.eth.getAccounts();
+        let accountsObjArray: Array<object> = [];
         for (let i in accounts) {
-            let balance = web3.utils.fromWei(await web3.eth.getBalance(accounts[i]));
-            let accountsObj = {account: accounts[i], balance: balance};
+            let balance: number = web3.utils.fromWei(await web3.eth.getBalance(accounts[i]));
+            let accountsObj: object = {account: accounts[i], balance: balance};
             accountsObjArray.push(accountsObj)
         }
         accountsInfo.innerText = JSON.stringify(accountsObjArray)
     }
 };
 
-function setUrlCookie(name, value, day) {
-    let date = new Date();
+function setUrlCookie(name: string, value: string, day: number) {
     date.setTime(date.getTime() + day * 60 * 60 * 24 * 1000);
     document.cookie = name + '=' + value + ';expires=' + date.toUTCString() + ';path=/';
 }
 
-function getUrlCookie(name) {
+function getUrlCookie(name: string): string {
     let value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
     return value ? value[2] : null;
 }
 
-function deleteUrlCookie(name) {
-    let date = new Date();
+function deleteUrlCookie(name: string) {
     document.cookie = name + "= " + "; expires=" + date.toUTCString() + "; path=/";
 }
