@@ -16,33 +16,36 @@ if (init !== null) {
     gethUrl.value = init
 }
 
-gethConnectBtn.onclick = () => {
-    web3 = new Web3(new Web3.providers.HttpProvider(gethUrl.value)); // http://192.168.0.204:8545
+gethConnectBtn.onclick = async () => {
     try {
-        let con = web3.isConnected();
+        // web3 = new Web3(new Web3.providers.HttpProvider(gethUrl.value)); // [0.20.X] http://192.168.0.206:8545
+        web3 = new Web3(gethUrl.value); // [1.X.X] ws://192.168.0.206:8546
+        const con = await web3.eth.net.isListening();
         gethConnectInfo.innerText = "connect (" + con + ")";
         if (con) {
             setUrlCookie(urlCookieKey, gethUrl.value, 1);
             accountsDiv.style.display = "inline"
         } else {
-            accountsDiv.style.display = "none"
+            console.log("false")
         }
+        // await web3.eth.getAccounts()
+
     } catch (err) {
         gethConnectInfo.innerText = err;
         accountsDiv.style.display = "none"
     }
 };
 
-accountsBtn.onclick = () => {
+accountsBtn.onclick = async () => {
     if (web3 === false) {
         accountsInfo.innerText = "connect false";
     } else {
-        let accounts = web3.eth.accounts;
+        let accounts = await web3.eth.getAccounts();
         let accountsObjArray = [];
         for (let i in accounts) {
             let accountsObj = {account: "Empty", balance: "Empty"};
             accountsObj.account = accounts[i];
-            accountsObj.balance = web3.eth.getBalance(accounts[i]).toString(10);
+            accountsObj.balance = await web3.eth.getBalance(accounts[i]).toString(10);
             accountsObjArray.push(accountsObj)
         }
         accountsInfo.innerText = JSON.stringify(accountsObjArray)

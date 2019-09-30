@@ -9,8 +9,8 @@
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {},
-  "devDependencies": {
-    "web3": "^0.20.6"
-  }
+  "dependencies": {
+    "web3": "^1.2.1"
+  },
+  "devDependencies": {}
 }
