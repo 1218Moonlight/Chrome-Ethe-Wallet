@@ -5,9 +5,14 @@ const urlCookieKey: string = "urlCookie";
 let gethUrl: HTMLInputElement = (<HTMLInputElement>document.getElementById('gethUrl'));
 let gethConnectBtn: HTMLButtonElement = (<HTMLButtonElement>document.getElementById('gethConnectBtn'));
 let gethConnectInfo: HTMLParagraphElement = (<HTMLParagraphElement>document.getElementById('gethConnectInfo'));
-let accountsDiv: HTMLDivElement = (<HTMLDivElement>document.getElementById('accountsDiv'));
 let accountsBtn: HTMLButtonElement = (<HTMLButtonElement>document.getElementById('accountsBtn'));
 let accountsInfo: HTMLParagraphElement = (<HTMLParagraphElement>document.getElementById('accountsInfo'));
+let sendToEtheBtn: HTMLButtonElement = (<HTMLButtonElement>document.getElementById("sendToEtheBtn"));
+let sendToEtheInfo: HTMLParagraphElement = (<HTMLParagraphElement>document.getElementById("sendToEtheInfo"));
+let sendToEtheFrom: HTMLInputElement = (<HTMLInputElement>document.getElementById("sendToEtheFrom"));
+let sendToEtheTo: HTMLInputElement = (<HTMLInputElement>document.getElementById("sendToEtheTo"));
+let sendToEtheValue: HTMLInputElement = (<HTMLInputElement>document.getElementById("sendToEtheValue"));
+let sendToEthePwd: HTMLInputElement = (<HTMLInputElement>document.getElementById("sendToEthePwd"));
 
 let init = getUrlCookie(urlCookieKey);
 if (init !== null) {
@@ -22,7 +27,6 @@ gethConnectBtn.onclick = async () => {
         gethConnectInfo.innerText = "connect (" + con + ")";
         if (con) {
             setUrlCookie(urlCookieKey, gethUrl.value, 1);
-            accountsDiv.style.display = "inline"
         } else {
             console.log("false")
         }
@@ -30,7 +34,6 @@ gethConnectBtn.onclick = async () => {
 
     } catch (err) {
         gethConnectInfo.innerText = err;
-        accountsDiv.style.display = "none"
     }
 };
 
@@ -41,11 +44,41 @@ accountsBtn.onclick = async () => {
         let accounts: Array<string> = await web3.eth.getAccounts();
         let accountsObjArray: Array<object> = [];
         for (let i in accounts) {
-            let balance: number = web3.utils.fromWei(await web3.eth.getBalance(accounts[i]));
+            let balance: number = web3.utils.fromWei(await web3.eth.getBalance(accounts[i]), 'ether');
             let accountsObj: object = {account: accounts[i], balance: balance};
             accountsObjArray.push(accountsObj)
         }
         accountsInfo.innerText = JSON.stringify(accountsObjArray)
+    }
+};
+
+sendToEtheBtn.onclick = async () => {
+    if (web3 === undefined) {
+        sendToEtheInfo.innerText = "connect false"
+    } else {
+        if (sendToEtheFrom.value === undefined || sendToEtheFrom.value === "") {
+            sendToEtheInfo.innerText = "[Empty] From"
+        } else if (sendToEtheTo.value === undefined || sendToEtheTo.value === "") {
+            sendToEtheInfo.innerText = "[Empty] To"
+        } else if (sendToEtheValue.value === undefined || sendToEtheValue.value === "") {
+            sendToEtheInfo.innerText = "[Empty] Value"
+        } else if (sendToEthePwd.value === undefined || sendToEthePwd.value === "") {
+            sendToEtheInfo.innerText = "[Empty] PWD"
+        } else {
+            let isTrue = await web3.eth.personal.unlockAccount(sendToEtheFrom.value, sendToEthePwd.value);
+            let state: string;
+            if (isTrue) {
+                state = await web3.eth.sendTransaction({
+                    from: sendToEtheFrom.value,
+                    to: sendToEtheTo.value,
+                    value: sendToEtheValue.value
+                });
+                sendToEtheInfo.innerText = JSON.stringify(state)
+            } else {
+                sendToEtheInfo.innerText = isTrue
+            }
+            await web3.eth.personal.lockAccount(sendToEtheFrom.value)
+        }
     }
 };
 

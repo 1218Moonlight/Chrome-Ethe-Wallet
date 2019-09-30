@@ -8,9 +8,9 @@
 </head>
 <body>
 
-<div id="connectDiv">
+<div class="parentDiv">
     <div>
-        <label for="gethUrl">Geth URL :&nbsp;</label><input type="text" id="gethUrl" placeholder="http//url:port"/>
+        <label>Geth Url : <input type="text" id="gethUrl" placeholder="ws//url:port"/></label>
         <button id="gethConnectBtn">Connect</button>
     </div>
     <div>
@@ -18,9 +18,22 @@
     </div>
 </div>
 
-<div id="accountsDiv">
+<div class="parentDiv">
     <button id="accountsBtn">Get Accounts</button>
-    <p id="accountsInfo"></p>
+    <div>
+        <p id="accountsInfo"></p>
+    </div>
+</div>
+
+<div class="parentDiv">
+    <label><input id="sendToEtheFrom" type="text" placeholder="From"/></label>
+    <label><input id="sendToEtheTo" type="text" placeholder="To"/></label>
+    <label><input id="sendToEtheValue" type="text" placeholder="Value"/></label>
+    <label><input id="sendToEthePwd" type="password" placeholder="Password"/></label>
+    <button id="sendToEtheBtn">Send to Ethe</button>
+    <div>
+        <p id="sendToEtheInfo"></p>
+    </div>
 </div>
 
 </body>

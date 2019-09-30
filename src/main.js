@@ -41,9 +41,14 @@ var urlCookieKey = "urlCookie";
 var gethUrl = document.getElementById('gethUrl');
 var gethConnectBtn = document.getElementById('gethConnectBtn');
 var gethConnectInfo = document.getElementById('gethConnectInfo');
-var accountsDiv = document.getElementById('accountsDiv');
 var accountsBtn = document.getElementById('accountsBtn');
 var accountsInfo = document.getElementById('accountsInfo');
+var sendToEtheBtn = document.getElementById("sendToEtheBtn");
+var sendToEtheInfo = document.getElementById("sendToEtheInfo");
+var sendToEtheFrom = document.getElementById("sendToEtheFrom");
+var sendToEtheTo = document.getElementById("sendToEtheTo");
+var sendToEtheValue = document.getElementById("sendToEtheValue");
+var sendToEthePwd = document.getElementById("sendToEthePwd");
 var init = getUrlCookie(urlCookieKey);
 if (init !== null) {
     gethUrl.value = init;
@@ -62,7 +67,6 @@ gethConnectBtn.onclick = function () { return __awaiter(_this, void 0, void 0, f
                 gethConnectInfo.innerText = "connect (" + con + ")";
                 if (con) {
                     setUrlCookie(urlCookieKey, gethUrl.value, 1);
-                    accountsDiv.style.display = "inline";
                 }
                 else {
                     console.log("false");
@@ -71,7 +75,6 @@ gethConnectBtn.onclick = function () { return __awaiter(_this, void 0, void 0, f
             case 2:
                 err_1 = _a.sent();
                 gethConnectInfo.innerText = err_1;
-                accountsDiv.style.display = "none";
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
@@ -100,7 +103,7 @@ accountsBtn.onclick = function () { return __awaiter(_this, void 0, void 0, func
                 _d = (_c = web3.utils).fromWei;
                 return [4 /*yield*/, web3.eth.getBalance(accounts[i])];
             case 4:
-                balance = _d.apply(_c, [_e.sent()]);
+                balance = _d.apply(_c, [_e.sent(), 'ether']);
                 accountsObj = { account: accounts[i], balance: balance };
                 accountsObjArray.push(accountsObj);
                 _e.label = 5;
@@ -111,6 +114,55 @@ accountsBtn.onclick = function () { return __awaiter(_this, void 0, void 0, func
                 accountsInfo.innerText = JSON.stringify(accountsObjArray);
                 _e.label = 7;
             case 7: return [2 /*return*/];
+        }
+    });
+}); };
+sendToEtheBtn.onclick = function () { return __awaiter(_this, void 0, void 0, function () {
+    var isTrue, state;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                if (!(web3 === undefined)) return [3 /*break*/, 1];
+                sendToEtheInfo.innerText = "connect false";
+                return [3 /*break*/, 11];
+            case 1:
+                if (!(sendToEtheFrom.value === undefined || sendToEtheFrom.value === "")) return [3 /*break*/, 2];
+                sendToEtheInfo.innerText = "[Empty] From";
+                return [3 /*break*/, 11];
+            case 2:
+                if (!(sendToEtheTo.value === undefined || sendToEtheTo.value === "")) return [3 /*break*/, 3];
+                sendToEtheInfo.innerText = "[Empty] To";
+                return [3 /*break*/, 11];
+            case 3:
+                if (!(sendToEtheValue.value === undefined || sendToEtheValue.value === "")) return [3 /*break*/, 4];
+                sendToEtheInfo.innerText = "[Empty] Value";
+                return [3 /*break*/, 11];
+            case 4:
+                if (!(sendToEthePwd.value === undefined || sendToEthePwd.value === "")) return [3 /*break*/, 5];
+                sendToEtheInfo.innerText = "[Empty] PWD";
+                return [3 /*break*/, 11];
+            case 5: return [4 /*yield*/, web3.eth.personal.unlockAccount(sendToEtheFrom.value, sendToEthePwd.value)];
+            case 6:
+                isTrue = _a.sent();
+                state = void 0;
+                if (!isTrue) return [3 /*break*/, 8];
+                return [4 /*yield*/, web3.eth.sendTransaction({
+                        from: sendToEtheFrom.value,
+                        to: sendToEtheTo.value,
+                        value: sendToEtheValue.value
+                    })];
+            case 7:
+                state = _a.sent();
+                sendToEtheInfo.innerText = JSON.stringify(state);
+                return [3 /*break*/, 9];
+            case 8:
+                sendToEtheInfo.innerText = isTrue;
+                _a.label = 9;
+            case 9: return [4 /*yield*/, web3.eth.personal.lockAccount(sendToEtheFrom.value)];
+            case 10:
+                _a.sent();
+                _a.label = 11;
+            case 11: return [2 /*return*/];
         }
     });
 }); };
