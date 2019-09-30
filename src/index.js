@@ -43,9 +43,8 @@ accountsBtn.onclick = async () => {
         let accounts = await web3.eth.getAccounts();
         let accountsObjArray = [];
         for (let i in accounts) {
-            let accountsObj = {account: "Empty", balance: "Empty"};
-            accountsObj.account = accounts[i];
-            accountsObj.balance = await web3.eth.getBalance(accounts[i]).toString(10);
+            let balance = web3.utils.fromWei(await web3.eth.getBalance(accounts[i]));
+            let accountsObj = {account: accounts[i], balance: balance};
             accountsObjArray.push(accountsObj)
         }
         accountsInfo.innerText = JSON.stringify(accountsObjArray)
